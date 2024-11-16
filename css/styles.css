@@ -1,0 +1,51 @@
+body {
+    padding: 0;
+    margin: 0;
+    height: 100vh; /* Makes the body take the full height of the viewport */
+    background-color: #f0f0f0; /* Optional background for visibility */
+}
+html, body, #map {
+    height: 100vh;
+    width: 100vw;
+}
+
+#mapContainer {
+    position: relative; 
+    width: 100%;
+    height: 100%;
+}
+
+#map {
+    position: absolute; 
+    z-index: 1;
+}
+
+.mapTitle, .mapDescription {
+    font-family: "Geist Mono", monospace;
+    color:#162A2C;
+}
+
+.mapTitle {
+    font-size: 20px;
+}
+
+.mapDescription {
+    font-size: 16px;
+}
+
+#titleContainer {
+    position: absolute;
+    border-radius: 16px;
+    border-color: #162A2C;
+    top: 0;
+    left: 60; 
+    width: 300px;
+    padding: 20px;
+    text-align: center;
+    background-color: #E8F5E9;
+    border-style: double;
+    z-index: 10; 
+    margin-left: 2px;
+    margin-top: 2px;
+}
+
