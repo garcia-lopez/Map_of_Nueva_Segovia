@@ -1,6 +1,9 @@
-import {json_data} from '../data/json_Data.js'
+import {json_data} from '../data/json_Data.js';
+import { Text } from './Text.js';
 var map = L.map('map').setView([13.647, -86.468], 9);
 var popup = L.popup();
+
+var selectedFeature = document.getElementById('comboBox').value;
 
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
@@ -19,7 +22,7 @@ function getColor(d) {
 
 function style(feature) {
     return {
-        fillColor: getColor(feature.properties.Viviendas_),
+        fillColor: getColor(feature.properties[selectedFeature]),
         weight: 2,
         color: '#162A2C',
         opacity: 1,
@@ -47,22 +50,34 @@ function resetHighlight(e) {
 
 var geojson;
 // Add geojson with listeners
-geojson = L.geoJson(json_data, {
-    style: style, // Apply the style function
-    onEachFeature: function(feature, layer) {
-        // Add event listeners to each feature's layer
-        layer.on({
-            mouseover: highlightFeature,
-            mouseout: resetHighlight,
-            click: function(e) {
-                popup
-        .setLatLng(e.latlng)
-        .setContent("Total de viviendas en el municipio de "+feature.properties.Municipio +": "+ feature.properties.Viviendas_)
-        .openOn(map);
-            }
-        });
-    }
-}).addTo(map);
+function selectData() {
+    geojson = L.geoJson(json_data, {
+        style: style, 
+        onEachFeature: function(feature, layer) {
+            layer.on({
+                mouseover: highlightFeature,
+                mouseout: resetHighlight,
+                click: function(e) {
+                    popup
+            .setLatLng(e.latlng)
+            .setContent(Text[selectedFeature] + " en el municipio de "+feature.properties.Municipio +": "+ feature.properties[selectedFeature])
+            .openOn(map);
+                }
+            });
+        }
+    }).addTo(map);
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    document.getElementById("comboBox").addEventListener("change", function (event) {
+        const selectElement = event.target;
+
+        selectedFeature = selectElement.value;
+
+        selectData();
+    });
+});
+selectData();
 
 // Tile layer for the MiniMap
 var miniMapLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {

@@ -35,7 +35,7 @@ html, body, #map {
 
 #titleContainer {
     position: absolute;
-    border-radius: 16px;
+    border-radius: 10px;
     border-color: white;
     top: 0;
     left: 60; 
@@ -46,7 +46,7 @@ html, body, #map {
     border-style: solid;
     z-index: 10; 
     margin-left: 2px;
-    margin-top: 2px;
+    margin-top: 10px;
     box-shadow: 8px 8px 8px rgba(0, 0, 0, 0.2);;
 }
 
@@ -56,7 +56,3 @@ html, body, #map {
     stroke-width: 4px; /* Change the thickness */
 }
 
-.leaflet-control-minimap {
-    width: 250px !important;  /* Override width */
-    height: 200px !important; /* Override height */
-}
