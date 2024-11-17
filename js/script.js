@@ -1,10 +1,12 @@
 import {json_data} from '../data/json_Data.js'
 var map = L.map('map').setView([13.647, -86.468], 9);
+var popup = L.popup();
 
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 }).addTo(map);
+
 
 function getColor(d) {
     return d >= 7870 && d < 25264 ? '#A6CEE3' :  // Pastel Blue
@@ -31,7 +33,7 @@ function highlightFeature(e) {
 
     layer.setStyle({
         weight: 5,
-        color: '#686867',
+        color: '#567C8D',
         dashArray: '',
         fillOpacity: 2
     });
@@ -52,9 +54,29 @@ geojson = L.geoJson(json_data, {
         layer.on({
             mouseover: highlightFeature,
             mouseout: resetHighlight,
-            /*click: function(e) {
-                alert("You clicked on " + feature.properties.name); // Example action on click
-            }*/
+            click: function(e) {
+                popup
+        .setLatLng(e.latlng)
+        .setContent("Total de viviendas en el municipio de "+feature.properties.Municipio +": "+ feature.properties.Viviendas_)
+        .openOn(map);
+            }
         });
     }
+}).addTo(map);
+
+// Tile layer for the MiniMap
+var miniMapLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    minZoom: 6,
+    maxZoom: 13,
+    attribution: '&copy; OpenStreetMap contributors'
+});
+
+
+
+// MiniMap control
+var miniMap = new L.Control.MiniMap(miniMapLayer, {
+    toggleDisplay: true,
+    minimized: false,
+    position: 'bottomright',
+    
 }).addTo(map);

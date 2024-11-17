@@ -36,16 +36,27 @@ html, body, #map {
 #titleContainer {
     position: absolute;
     border-radius: 16px;
-    border-color: #162A2C;
+    border-color: white;
     top: 0;
     left: 60; 
     width: 300px;
     padding: 20px;
     text-align: center;
     background-color: #E8F5E9;
-    border-style: double;
+    border-style: solid;
     z-index: 10; 
     margin-left: 2px;
     margin-top: 2px;
+    box-shadow: 8px 8px 8px rgba(0, 0, 0, 0.2);;
 }
 
+.leaflet-control-minimap .leaflet-interactive {
+    stroke: #567C8D !important; /* Change the outline color */
+    fill: lightskyblue !important; /* Change the fill color */
+    stroke-width: 4px; /* Change the thickness */
+}
+
+.leaflet-control-minimap {
+    width: 250px !important;  /* Override width */
+    height: 200px !important; /* Override height */
+}
