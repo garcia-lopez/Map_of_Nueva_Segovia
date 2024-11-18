@@ -1,4 +1,4 @@
-<!DOCTYPE html<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta 
@@ -40,21 +40,19 @@
 </head>
 <body>
     <main>
-        <div id="mapContainer">
-            <div id="titleContainer">
-                <p class="mapTitle">Mapa de Nueva Segovia</p>
-                <label for="comboBox">Distribución </label>
-                    <select id="comboBox" name="options" on>
-                       <option value="Urbana">Urbana</option>
-                       <option value="Rural">Rural</option>
-                       <option value="Viviendas_">Viviendas</option>
-                       <option value="VIV_Urbana">Viviendas Urbanas</option>
-                       <option value="VIV_Rurale">Viviendas Rurales</option>
-                    </select>
-            </div>
-            <div id="map"></div>
+        <div id="titleContainer">
+            <p class="mapTitle">Mapa de Nueva Segovia</p>
+            <label for="comboBox" class="mapDescription">Distribución </label>
+                <select id="comboBox" name="options" class="mapCombo" on>
+                   <option value="Urbana">Urbana</option>
+                   <option value="Rural">Rural</option>
+                   <option value="Viviendas_">Viviendas</option>
+                   <option value="VIV_Urbana">Viviendas Urbanas</option>
+                   <option value="VIV_Rurale">Viviendas Rurales</option>
+                </select>
         </div>
-       
+        <img id="location" class="location" src="./assets/location_button.png"/>
+        <div id="map"></div>
     </main>
     <script type="module" src="/js/script.js"></script>
 </body>

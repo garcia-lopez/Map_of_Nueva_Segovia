@@ -2,6 +2,7 @@ import {json_data} from '../data/json_Data.js';
 import { Text } from './Text.js';
 var map = L.map('map').setView([13.647, -86.468], 9);
 var popup = L.popup();
+new L.Control.Scale({ imperial: false }).addTo(map);
 
 var selectedFeature = document.getElementById('comboBox').value;
 
@@ -10,6 +11,22 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 }).addTo(map);
 
+var info = L.control();
+
+info.onAdd = function (map) {
+    this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
+    this.update();
+    return this._div;
+};
+
+// method that we will use to update the control based on feature properties passed
+info.update = function (props) {
+    this._div.innerHTML = '<h4>Distribución '+Text[selectedFeature]+'</h4>' +  (props ?
+        '<b>' + props.Municipio + '</b><br />' + props[selectedFeature] 
+        : 'Señala un municipio');
+};
+
+info.addTo(map);
 
 function getColor(d) {
     return d >= 7870 && d < 25264 ? '#A6CEE3' :  // Pastel Blue
@@ -42,10 +59,12 @@ function highlightFeature(e) {
     });
 
     layer.bringToFront();
+    info.update(layer.feature.properties);
 }
 
 function resetHighlight(e) {
     geojson.resetStyle(e.target);
+    info.update();
 }
 
 var geojson;
@@ -60,13 +79,14 @@ function selectData() {
                 click: function(e) {
                     popup
             .setLatLng(e.latlng)
-            .setContent(Text[selectedFeature] + " en el municipio de "+feature.properties.Municipio +": "+ feature.properties[selectedFeature])
+            .setContent("Distribución "+ Text[selectedFeature] + " en el municipio de "+feature.properties.Municipio +": "+ feature.properties[selectedFeature])
             .openOn(map);
                 }
             });
         }
     }).addTo(map);
 }
+
 
 document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("comboBox").addEventListener("change", function (event) {
@@ -75,6 +95,11 @@ document.addEventListener("DOMContentLoaded", function () {
         selectedFeature = selectElement.value;
 
         selectData();
+        info.update();
+    });
+    document.getElementById("location").addEventListener('click', function() {
+        // Your logic here
+        map.flyTo([13.647, -86.468], 9);
     });
 });
 selectData();
