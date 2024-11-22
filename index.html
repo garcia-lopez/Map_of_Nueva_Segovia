@@ -41,11 +41,15 @@
 <body>
     <main>
         <div id="titleContainer">
-            <p class="mapTitle">Mapa de Nueva Segovia</p>
-            <label for="comboBox" class="mapDescription">Distribución </label>
+            <p class="mapTitle">Mapa de Población y Viviendas del Departamento de Nueva Segovia</p>
+            <select id="mapType" name="mapOptions" class="mapCombo" on>
+               <option value="Default">Nueva Segovia</option>
+               <option value="Coropletas">Coropletas</option>
+               <option value="SimProp">Simbolos Proporcionales</option>
+            </select>
                 <select id="comboBox" name="options" class="mapCombo" on>
-                   <option value="Urbana">Urbana</option>
-                   <option value="Rural">Rural</option>
+                   <option value="Urbana">Población Urbana</option>
+                   <option value="Rural">Población Rural</option>
                    <option value="Viviendas_">Viviendas</option>
                    <option value="VIV_Urbana">Viviendas Urbanas</option>
                    <option value="VIV_Rurale">Viviendas Rurales</option>

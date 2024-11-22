@@ -1,8 +1,8 @@
 body {
     padding: 0;
     margin: 0;
-    height: 100vh; /* Makes the body take the full height of the viewport */
-    background-color: #f0f0f0; /* Optional background for visibility */
+    height: 100vh; 
+    background-color: #f0f0f0;
 }
 html, body, #map {
     height: 100vh;
@@ -11,11 +11,11 @@ html, body, #map {
 
 
 #map {
-    position: absolute; 
+    position: relative; 
     z-index: 1;
 }
 
-.mapTitle, .mapDescription, .info, .mapCombo {
+.mapTitle, .mapDescription, .info, .mapCombo, .leaflet-control-layers-list {
     font-family: "Geist Mono", monospace;
     color:#162A2C;
 }
@@ -42,6 +42,8 @@ html, body, #map {
     border-radius: 10px;
     outline-style: none;
     padding: 5px;
+    margin-top: 10px;
+    width: 200px;
 }
 
 .location {
@@ -64,7 +66,7 @@ html, body, #map {
     border-radius: 10px;
     border-color: white;
     top: 0;
-    left: 60; 
+    left: 10px; 
     width: 300px;
     padding: 20px;
     text-align: center;
@@ -94,15 +96,59 @@ html, body, #map {
     color: #777;
 }
 
+.bottom-right {
+    position: absolute;
+    top: 10px;
+    right: 5px; 
+    z-index: 10;
+    background:  rgba(255,255,255,0.8);
+    padding: 20px; 
+    border: 1px solid #ccc;
+    border-radius: 5px; 
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    width: 200px;
+    height: 70px; 
+}
+
+/*Trying to style the layer control*/
+.leaflet-control-layers {
+    top: 5px;
+    right: 5px;
+    background-color: rgba(255, 255, 255, 0.7); 
+    border: 2px solid #567C8D;
+    border-radius: 8px; 
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); 
+}
+
+/* Style the layer list */
+.leaflet-control-layers-list {
+    background-color: rgba(255, 255, 255, 0.7);
+    padding: 10px; 
+    font-size: 14px; 
+}
+
 /* Media Query for smaller screens (phones) */
 @media (max-width: 768px) {
     #titleContainer {
-        top:70px;
-        width: 80%; /* Adjust width for smaller screens */
-        padding: 8px; /* Reduce padding */
+        top:5px;
+        left: 2px;
+        width: 80%;
+        padding: 8px; 
+        
+    }
+
+    .mapTitle {
+        font-size: 16px;
     }
 
     .mapDescription, .info {
         font-size: 12px; /* Reduce font size */
     }
+
+    .bottom-right {
+        display: none;
+    }
+
+
 }
+
