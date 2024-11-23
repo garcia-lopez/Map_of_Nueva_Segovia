@@ -1,8 +1,8 @@
 export const darkerColors = {
-    '#A6CEE3': '#5B9BB2', // Darker Pastel Blue
-    '#B2DF8A': '#78B556', // Darker Pastel Green
-    '#FB9A99': '#D15757', // Darker Pastel Red
-    '#FDBF6F': '#E18B3A', // Darker Pastel Orange
-    '#CAB2D6': '#9473A7', // Darker Pastel Purple
-    '#FFFF99': '#E1CC59'  // Darker Pastel Yellow
+    '#FF69B4': '#C83284', // Darker Hot Pink
+    '#FF85B3': '#D75A90', // Darker Bright Pink
+    '#FFA6C9': '#D1769B', // Darker Light Pink
+    '#FFC4A3': '#E18B65', // Darker Peach
+    '#FFE3B3': '#D1B084', // Darker Pastel Peach
+    '#FFF8C4': '#DED38E'  // Darker Light Yellow
 };

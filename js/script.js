@@ -2,6 +2,8 @@ import {json_data} from '../data/json_Data.js';
 import { json_data_puntos } from '../data/json_Data_Puntos.js';
 import { Text } from './Text.js';
 import { darkerColors } from './Colors.js';
+import { getColors } from './GetColors.js';
+import { legendValue } from './Leyenda.js';
 
 // Tile layer for the map
 let openStreetMap = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -31,10 +33,13 @@ let baseLayers = {
 let popup = L.popup();
 //Selected Feature from ComboBox
 let selectedFeature = document.getElementById('comboBox').value;
+ let leyenda = document.getElementById('legend');
 //Geojson Layers
 let geojson;
 let geojson2;
 
+//Marker
+let marker;
 //New info control
 let info = L.control();
 
@@ -58,18 +63,9 @@ info.addTo(map);
 // Add layer control to the map
 L.control.layers(baseLayers, null).addTo(map);
 
-function getColor(d) {
-    return d >= 7870 && d < 25264 ? '#A6CEE3' :  // Pastel Blue
-    d >= 2186 && d < 7870  ? '#B2DF8A' :  // Pastel Green
-    d >= 1118 && d < 2186  ? '#FB9A99' :  // Pastel Red
-    d >= 408 && d < 1118   ? '#FDBF6F' :  // Pastel Orange
-    d >= 203 && d < 408    ? '#CAB2D6' :  // Pastel Purple
-                             '#FFFF99';   // Pastel Yellow
-}
-
 function style(feature) {
     return {
-        fillColor: getColor(feature.properties[selectedFeature]),
+        fillColor: getColors[selectedFeature](feature.properties[selectedFeature]),
         weight: 2,
         color: '#162A2C',
         opacity: 1,
@@ -80,7 +76,7 @@ function style(feature) {
 
 function highlightFeature(e) {
     let layer = e.target;
-    let originalFillColor = getColor(layer.feature.properties[selectedFeature]);
+    let originalFillColor = getColors[selectedFeature](layer.feature.properties[selectedFeature]);
     layer.setStyle({
         weight: 5,
         color: darkerColors[originalFillColor],
@@ -138,12 +134,12 @@ function selectDataDots() {
         onEachFeature: function (feature, layer) {
 
             layer.on({
-                mouseover: highlightFeature, // Llama a tu función highlightFeature
+                mouseover: highlightFeature, 
                 mouseout: function (e) {
-                    geojson.resetStyle(e.target); // Resetea el estilo al salir
+                    geojson.resetStyle(e.target); 
                 },
                 click: function (e) {
-                    // Example: Show popup with feature info
+
                     popup
                         .setLatLng(e.latlng)
                         .setContent(
@@ -195,25 +191,108 @@ function removeLayer() {
     }
 }
 
+//Clear the Legend div
+function clearLegend(){
+    while (leyenda.firstChild) {
+        leyenda.removeChild(leyenda.firstChild);
+    }
+}
+
 function selectMap(mapType) {
     switch (mapType) {
         case "Coropletas":
+            marker.remove();
+            addLegend(selectedFeature, leyenda);
             removeLayer();
             selectData();
             break;
 
         case "SimProp":
+            marker.remove();
+            addLegendCircles(selectedFeature, leyenda);
             removeLayer();
             geojson2 = L.geoJson(json_data).addTo(map);
             selectDataDots()
             break;
 
         default:
+            marker = L.marker([13.76285370795506, -86.276463822283588])
+            .bindPopup('Nueva Segovia')
+            .addTo(map);
+        
+            // Show the popup on hover
+            marker.on('mouseover', function (e) {
+                this.openPopup();
+            });
+        
+            // Hide the popup when the mouse leaves the marker
+            marker.on('mouseout', function (e) {
+                this.closePopup();
+            });
+            clearLegend();
             removeLayer();
             geojson = L.geoJson(json_data).addTo(map);
             break;
     }
 }
+function calculateRadius(value, ranges) {
+    const maxRadius = 20; // Adjust as needed for visualization
+    const minRadius = 2;  // Minimum size for the smallest range
+    const maxValue = Math.max(...ranges.map(item => parseInt(item.range.split(' - ')[1], 10))); // Get the maximum upper bound
+    return (value / maxValue) * (maxRadius - minRadius) + minRadius;
+}
+function addLegendCircles(selectedFeature, leyenda) {
+    clearLegend();
+    let ul = document.createElement('ul');
+    legendValue[selectedFeature].forEach(value => {
+        const li = document.createElement('li');
+        const span = document.createElement('span');
+        li.textContent = `${value.range}`;
+        li.style.fontSize = '14px';
+        const rangeValues = value.range.split('-');
+        const radius = calculateRadius(parseInt(rangeValues[1], 10), legendValue[selectedFeature]);
+
+        Object.assign(span.style, {
+            backgroundColor:'blue',
+            borderRadius: '50%',
+            height: `${radius * 2}px`, 
+            width: `${radius * 2}px`, 
+            display: 'inline-block', // Ensure it renders the height/width properly
+        });
+        li.appendChild(span);
+        ul.appendChild(li); 
+    });
+    let h1 = document.createElement('h1');
+    h1.innerText = "Leyenda";
+    leyenda.appendChild(h1);
+    leyenda.appendChild(ul);
+}
+
+
+
+function addLegend(selectedFeature, leyenda) {
+    clearLegend();
+    let ul = document.createElement('ul');
+    legendValue[selectedFeature].forEach(value => {
+        const li = document.createElement('li');
+        const span = document.createElement('span');
+        li.textContent = `${value.range}`;
+        Object.assign(span.style, {
+            backgroundColor: `${value.color}`,
+            padding: '5px',
+            height: '10px', 
+            width: '10px', 
+            display: 'inline-block' // Ensure it renders the height/width properly
+        });
+        li.appendChild(span);
+        ul.appendChild(li); 
+    });
+    let h1 = document.createElement('h1');
+    h1.innerText = "Leyenda";
+    leyenda.appendChild(h1);
+    leyenda.appendChild(ul);
+}
+
 
 document.addEventListener("DOMContentLoaded", function () {
     const comboBox = document.getElementById("comboBox");
@@ -233,18 +312,19 @@ document.addEventListener("DOMContentLoaded", function () {
         comboBox.addEventListener("change", function (event) {
             const selectElement = event.target;
             selectedFeature = selectElement.value;
-
+            
             if (mapType.value == "Coropletas"){
+                addLegend(selectedFeature, leyenda);
                 removeLayer();
                 selectData();
                 info.update();
             }
             else if(mapType.value == "SimProp"){
                 if (geojson) {
-                    console.log("buenas buenas");
                     map.removeLayer(geojson);
                     geojson = null;
                 } 
+                addLegendCircles(selectedFeature, leyenda);
                 selectDataDots();
                 info.update();
             }
@@ -254,6 +334,7 @@ document.addEventListener("DOMContentLoaded", function () {
         console.error("comboBox element not found");
     }
 
+    //Location Button action
     if (locationButton) {
         locationButton.addEventListener("click", function () {
             if (map && typeof map.flyTo === "function") {
